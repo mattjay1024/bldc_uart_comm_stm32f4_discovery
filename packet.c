@@ -27,6 +27,11 @@
 #include "crc.h"
 
 typedef struct {
+	uint8_t controller_id;
+	CAN_PACKET_ID cmd_id;
+} CAN_FRAME_DATA_t;
+
+typedef struct {
 	volatile unsigned char rx_state;
 	volatile unsigned char rx_timeout;
 	void(*send_func)(unsigned char *data, unsigned int len);
@@ -162,6 +167,21 @@ void packet_process_byte(uint8_t rx_data, int handler_num) {
 		handler_states[handler_num].rx_state = 0;
 		break;
 
+	default:
+		handler_states[handler_num].rx_state = 0;
+		break;
+	}
+}
+
+void packet_process_frame(uint8_t *rx_frame, CAN_FRAME_DATA_t metadata, int handler_num) {
+	switch (handler_states[handler_num].rx_state) {
+	case 0:
+		if (metadata.cmd_id == CAN_PACKET_PROCESS_SHORT_BUFFER) {
+		
+		} else if (
+	case 1:
+	case 2:
+	case 3:
 	default:
 		handler_states[handler_num].rx_state = 0;
 		break;
